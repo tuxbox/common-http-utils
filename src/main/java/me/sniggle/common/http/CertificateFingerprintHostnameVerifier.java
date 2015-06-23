@@ -29,7 +29,7 @@ import java.util.*;
  * Copy of the Apache HTTPComponents DefaultHostnameVerifier with
  * additional functionality in order to support Certificate Pinning
  */
-public class PinCertificateHostnameVerifier implements HostnameVerifier {
+public class CertificateFingerprintHostnameVerifier implements HostnameVerifier {
 
   private final Map<String, String> fingerprints = new HashMap<>();
   private final PublicSuffixMatcher publicSuffixMatcher;
@@ -39,7 +39,7 @@ public class PinCertificateHostnameVerifier implements HostnameVerifier {
    * @param fingerprints
    *          key: hostname, value: SHA256-Hex Hash
    */
-  public PinCertificateHostnameVerifier(Map<String, String> fingerprints) {
+  public CertificateFingerprintHostnameVerifier(Map<String, String> fingerprints) {
     this(fingerprints, null);
   }
 
@@ -49,7 +49,7 @@ public class PinCertificateHostnameVerifier implements HostnameVerifier {
    *          key: hostname, value: SHA256-Hex Hash
    * @param publicSuffixMatcher
    */
-  public PinCertificateHostnameVerifier(Map<String, String> fingerprints, PublicSuffixMatcher publicSuffixMatcher) {
+  public CertificateFingerprintHostnameVerifier(Map<String, String> fingerprints, PublicSuffixMatcher publicSuffixMatcher) {
     super();
     if( fingerprints != null ) {
       for( Map.Entry<String, String> e : fingerprints.entrySet() ) {
@@ -67,7 +67,7 @@ public class PinCertificateHostnameVerifier implements HostnameVerifier {
    *  the SHA256-Hex Hash
    * @return the instance of the hostname verifier
    */
-  public PinCertificateHostnameVerifier add(String hostname, String fingerprint) {
+  public CertificateFingerprintHostnameVerifier add(String hostname, String fingerprint) {
     String lhostname = (hostname != null) ? hostname.toLowerCase(Locale.ROOT) : null;
     if( lhostname != null && fingerprint != null ) {
       this.fingerprints.put(lhostname, fingerprint.replaceAll("[^a-zA-Z0-9]","").toLowerCase(Locale.ROOT));
