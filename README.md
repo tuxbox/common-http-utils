@@ -1,6 +1,8 @@
 http-helper
 ============
 
+[![Build Status](https://travis-ci.org/tuxbox/sniggle-http-helper.png?branch=master)](https://travis-ci.org/tuxbox/sniggle-http-helper)
+
 Enables easy certificate pinning facilities for Apache HTTPComponents
 
 License
