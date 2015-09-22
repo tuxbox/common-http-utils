@@ -29,7 +29,7 @@
 
   <groupId>me.sniggle</groupId>
   <artifactId>commons-http-utils</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2-SNAPSHOT</version>
 
   <properties>
     <cucumber.version>1.2.2</cucumber.version>
