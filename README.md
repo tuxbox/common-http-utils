@@ -1,7 +1,7 @@
-http-helper
+common-http-utils
 ============
 
-[![Build Status](https://travis-ci.org/tuxbox/sniggle-http-helper.png?branch=master)](https://travis-ci.org/tuxbox/sniggle-http-helper)
+[![Build Status](https://travis-ci.org/tuxbox/common-http-utils.png?branch=master)](https://travis-ci.org/tuxbox/common-http-utils)
 
 Enables easy certificate pinning facilities for Apache HTTPComponents
 
