@@ -75,6 +75,11 @@ public class CertificateFingerprintHostnameVerifier implements HostnameVerifier 
     return this;
   }
 
+  /**
+   *
+   * @param sslSession
+   * @return
+   */
   protected Certificate extractCertificate(SSLSession sslSession) {
     Certificate result = null;
     try {
@@ -90,6 +95,12 @@ public class CertificateFingerprintHostnameVerifier implements HostnameVerifier 
     return result;
   }
 
+  /**
+   *
+   * @param host
+   * @param cert
+   * @throws SSLException
+   */
   protected void verify(String host, X509Certificate cert) throws SSLException {
     boolean ipv4 = InetAddressUtils.isIPv4Address(host);
     boolean ipv6 = InetAddressUtils.isIPv6Address(host);
@@ -115,6 +126,12 @@ public class CertificateFingerprintHostnameVerifier implements HostnameVerifier 
 
   }
 
+  /**
+   *
+   * @param host
+   * @param subjectAlts
+   * @throws SSLException
+   */
   protected void matchIPAddress(String host, List<String> subjectAlts) throws SSLException {
     for(int i = 0; i < subjectAlts.size(); ++i) {
       String subjectAlt = (String)subjectAlts.get(i);
@@ -126,6 +143,12 @@ public class CertificateFingerprintHostnameVerifier implements HostnameVerifier 
     throw new SSLException("Certificate for <" + host + "> doesn\'t match any " + "of the subject alternative names: " + subjectAlts);
   }
 
+  /**
+   *
+   * @param host
+   * @param subjectAlts
+   * @throws SSLException
+   */
   protected void matchIPv6Address(String host, List<String> subjectAlts) throws SSLException {
     String normalisedHost = normaliseAddress(host);
 
@@ -140,6 +163,13 @@ public class CertificateFingerprintHostnameVerifier implements HostnameVerifier 
     throw new SSLException("Certificate for <" + host + "> doesn\'t match any " + "of the subject alternative names: " + subjectAlts);
   }
 
+  /**
+   *
+   * @param host
+   * @param subjectAlts
+   * @param publicSuffixMatcher
+   * @throws SSLException
+   */
   protected void matchDNSName(String host, List<String> subjectAlts, PublicSuffixMatcher publicSuffixMatcher) throws SSLException {
     String normalizedHost = host.toLowerCase(Locale.ROOT);
 
@@ -154,12 +184,25 @@ public class CertificateFingerprintHostnameVerifier implements HostnameVerifier 
     throw new SSLException("Certificate for <" + host + "> doesn\'t match any " + "of the subject alternative names: " + subjectAlts);
   }
 
+  /**
+   *
+   * @param host
+   * @param cn
+   * @param publicSuffixMatcher
+   * @throws SSLException
+   */
   protected void matchCN(String host, String cn, PublicSuffixMatcher publicSuffixMatcher) throws SSLException {
     if(!matchIdentityStrict(host, cn, publicSuffixMatcher)) {
       throw new SSLException("Certificate for <" + host + "> doesn\'t match " + "common name of the certificate subject: " + cn);
     }
   }
 
+  /**
+   *
+   * @param subjectPrincipal
+   * @return
+   * @throws SSLException
+   */
   protected String extractCN(String subjectPrincipal) throws SSLException {
     if(subjectPrincipal == null) {
       return null;
@@ -193,7 +236,12 @@ public class CertificateFingerprintHostnameVerifier implements HostnameVerifier 
     }
   }
 
-
+  /**
+   *
+   * @param cert
+   * @param subjectType
+   * @return
+   */
   protected List<String> extractSubjectAlts(X509Certificate cert, int subjectType) {
     Collection c = null;
 
@@ -224,6 +272,11 @@ public class CertificateFingerprintHostnameVerifier implements HostnameVerifier 
     return subjectAltList;
   }
 
+  /**
+   *
+   * @param hostname
+   * @return
+   */
   protected String normaliseAddress(String hostname) {
     if(hostname == null) {
       return hostname;
@@ -237,10 +290,24 @@ public class CertificateFingerprintHostnameVerifier implements HostnameVerifier 
     }
   }
 
+  /**
+   *
+   * @param host
+   * @param domainRoot
+   * @return
+   */
   protected boolean matchDomainRoot(String host, String domainRoot) {
     return domainRoot == null?false:host.endsWith(domainRoot) && (host.length() == domainRoot.length() || host.charAt(host.length() - domainRoot.length() - 1) == 46);
   }
 
+  /**
+   *
+   * @param host
+   * @param identity
+   * @param publicSuffixMatcher
+   * @param strict
+   * @return
+   */
   protected boolean matchIdentity(String host, String identity, PublicSuffixMatcher publicSuffixMatcher, boolean strict) {
     if(publicSuffixMatcher != null && host.contains(".") && !matchDomainRoot(host, publicSuffixMatcher.getDomainRoot(identity, DomainType.ICANN))) {
       return false;
@@ -269,22 +336,55 @@ public class CertificateFingerprintHostnameVerifier implements HostnameVerifier 
     }
   }
 
+  /**
+   *
+   * @param host
+   * @param identity
+   * @param publicSuffixMatcher
+   * @return
+   */
   protected boolean matchIdentity(String host, String identity, PublicSuffixMatcher publicSuffixMatcher) {
     return matchIdentity(host, identity, publicSuffixMatcher, false);
   }
 
+  /**
+   *
+   * @param host
+   * @param identity
+   * @return
+   */
   protected boolean matchIdentity(String host, String identity) {
     return matchIdentity(host, identity, (PublicSuffixMatcher)null, false);
   }
 
+  /**
+   *
+   * @param host
+   * @param identity
+   * @param publicSuffixMatcher
+   * @return
+   */
   protected boolean matchIdentityStrict(String host, String identity, PublicSuffixMatcher publicSuffixMatcher) {
     return matchIdentity(host, identity, publicSuffixMatcher, true);
   }
 
+  /**
+   *
+   * @param host
+   * @param identity
+   * @return
+   */
   protected boolean matchIdentityStrict(String host, String identity) {
     return matchIdentity(host, identity, (PublicSuffixMatcher)null, true);
   }
 
+  /**
+   *
+   * @param hostname
+   * @param c
+   * @return
+   * @throws CertificateEncodingException
+   */
   protected boolean verifyFingerprint(String hostname, Certificate c) throws CertificateEncodingException {
     boolean result = false;
     if( !fingerprints.isEmpty() ) {

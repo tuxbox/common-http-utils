@@ -12,18 +12,28 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
 /**
- * Created by iulius on 24/06/15.
+ * Helper class to calculate the Hash to verify the certificate with
  */
 public class CalculateCertificateHash {
 
   private String certificatePath;
   private Certificate certificate;
 
+  /**
+   *
+   * @param path
+   *    the path to the certificate
+   */
   public CalculateCertificateHash(String path) {
     super();
     this.certificatePath = path;
   }
 
+  /**
+   * validates that the given certificate path exists and the Certificate could be read
+   *
+   * @return true if Certificate read successfully from path
+   */
   public boolean validateCertificate() {
     boolean result = false;
     if( certificatePath != null ) {
@@ -40,6 +50,11 @@ public class CalculateCertificateHash {
     return result;
   }
 
+  /**
+   * calculates the SHA-256 hash and converts it to a Hex String
+   *
+   * @return the Hex String or null
+   */
   public String calculateHash() {
     String result = null;
     if( certificate != null ) {
@@ -52,8 +67,15 @@ public class CalculateCertificateHash {
     return result;
   }
 
+  /**
+   * main method to be called from command line
+   *
+   * @param args
+   *    takes the absolute path to the certificate to fingerprint
+   * @throws Exception
+   */
   public static void main(String[] args) throws Exception {
-    if( args.length == 0 ) {
+    if( args.length == 1 ) {
       CalculateCertificateHash calculateCertificateHash = new CalculateCertificateHash(args[0]);
       if( calculateCertificateHash.validateCertificate() ) {
         System.out.print(calculateCertificateHash.calculateHash());
